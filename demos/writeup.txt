@@ -1,0 +1,133 @@
+TOP LEVEL GOAL:
+Real time synchronous group chat
+
+SUB GOALS
+
+<See screenshots for UI examples>
+
+1. User signup: Allow account creation by inserting into users database. 
+Password will be hashed and stored in a database column.
+
+    if getUser(username) is not None:
+        return error("User exists")
+    
+    user = addUser(username, password)
+
+    return success(user.getToken(password))
+
+2. Compare hash of input password against hash stored in users database.
+
+    username = request.form.get('user')
+    password = request.form.get('pass')
+
+    if username == "" or password == "":
+        return error("Incomplete Credentials")
+
+    user = getUser(username)
+
+    if user is None:
+        return error("No such user")
+    
+    token = user.getToken(password)
+
+    if token is None:
+        return error("Invalid Password")
+
+    return success(token)
+
+3. Send strings via sockets
+
+    @socketio.on('message')
+    def handleMessage(message):
+        send(message, broadcast = True)
+
+4. Send JSON via Sockets
+
+    JS:
+
+    const messagePacket = (username, content, token) => ({
+        type: "MESSAGE",
+        payload: { username, content, token }
+    });
+    
+    socket.send(messagePacket(state.username, 
+                              $('input.message').val(),
+                              state.usertoken))
+
+    FLASK:
+
+    @socketio.on('message')
+    def handleMessage(packet):
+        if packet['type'] == "MESSAGE":
+
+            payload = packet['payload']
+            username = payload['username']
+            content = payload['content']
+            token = payload['token']
+
+            if getUser(username).verifyToken(token):
+                send(message(username, content), broadcast = True)
+                addMessage(username, content)
+
+5. Save messages to database for history:
+Input into messages table and join table with the message ID and the user ID. 
+Store the current time in milliseconds in the database to sort the messages by
+their date / time
+
+    class Message(Base):
+        def __init__(self, content):
+            self.content = content
+            self.time = int(round(time.time() * 1000))
+
+6. Label messages with the username of the sender beneath. 
+
+    const renderMessage = (content, username, thisUser) => (
+        "<div class='message" + 
+        (username == thisUser ? " personal" : "") + 
+        "'><span>" + username + "</span>" + content + "</div>"
+    );
+
+    div.message span {
+        position: absolute;
+        color: #ccc;
+        left: 16px;
+        bottom: -20px;
+    }
+
+7. Differentiate messages sent by the logged in user render messages from the logged 
+in user in blue and right aligned. 
+
+    HTML (See above)
+    CSS:
+
+    div.message.personal {
+        background: #1D90FA;
+        margin-bottom: 16px;
+        color: white;
+        float: right;
+    }
+
+8. Make sure that expired tokens aren't verified. Compare current time to the 
+expiration time stored in the users table
+
+    def verifyToken(self, token):
+        if token == self.token and self.expire > getTime():
+            return True;
+        return False;
+
+    if getUser(username).verifyToken(token):
+        send(message(username, content), broadcast = True)
+        addMessage(username, content)
+
+
+9. User-specific message pages 
+
+    @app.route("/user/<id>")
+    def user(id):
+        return render_template('index.html', messages=getMessages(id), submit=False)
+
+10. Replying to messages. Create a join table between the messages 
+table and itself. Insert into table every time there's a message which
+is a child of another message.
+
+<Incomplete>

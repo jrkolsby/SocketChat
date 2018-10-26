@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Roboto');
+
+body {
+    font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+}
+
+html, body {
+    height: 100%;
+    overflow: auto;
+}
+
+div.modal.login {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 8px;
+    padding: 32px;
+    background: #fff;
+    width: 300px;
+    box-shadow: 0 0 0 1000px rgba(0,0,0,0.2),
+                0 0 40px rgba(0,0,0,0.3);
+    z-index: 200;
+}
+
+div.modal-login input {
+    margin-bottom: 16px;
+}
+
+div.modal-login button {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+h6 {
+    font-size: 16px;
+    font-weight: normal;
+    margin-bottom: 12px;
+    color: #ccc;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: normal;
+    margin-bottom: 24px;
+}
+
+div.chat {
+    padding: 16px;
+}
+
+div.chat .message:last-child {
+    margin-bottom: 100px;
+}
+
+div.submit {
+    position: absolute;
+    padding: 16px;
+    padding-right: 116px;
+    width: 100%;
+    bottom: 0;
+    background: white;
+    box-shadow: 0 -5px 5px white;
+    z-index: 100;
+}
+
+div.message {
+    display: block;
+    clear: both;
+    position: relative;
+    background: #f1f1f1;
+    width: 300px;
+    margin-bottom: 32px;
+    border-radius: 16px;
+    padding: 16px;
+    line-height: 1.2;
+}
+
+div.message span {
+    position: absolute;
+    color: #ccc;
+    left: 16px;
+    bottom: -20px;
+}
+
+div.message.personal {
+    background: #1D90FA;
+    margin-bottom: 16px;
+    color: white;
+    float: right;
+}
+
+div.message.personal span {
+    display: none;
+}
+
+button {
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    background: #1D90FA;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    transition: 0.1s background ease-in-out;
+}
+
+button:hover {
+    background: #4fa8fb;
+}
+
+a {
+    color: #bbb;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+div.submit button {
+    top: 47%;
+    transform: translateY(-50%);
+    right: 16px;
+    position: absolute;
+}
+
+input {
+    font-size: 16px;
+    outline: none;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 32px;
+    background: none;
+    width: 100%;
+}

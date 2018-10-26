@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Message App</title>
+    <link rel="stylesheet" href="/static/css/reset.css" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/js/socket.io.js"></script>
+    <script type="text/javascript" src="/static/js/messages.js"></script>
+</head>
+<body>
+    <div class="modal.login">
+        <h1>User Login</h1>
+        <input placeholder="Username" class="user" type="text" />
+        <input placeholder="Password" class="pass" type="password" />
+        <button class="login">Login</button>
+        <a class="signup">Or create a new account...</a>
+    </div>
+    <div class="modal.signup">
+        <h1>Make an Account</h1>
+        <input placeholder="Username" class="user" type="text" />
+        <input placeholder="Password" class="pass" type="password" />
+        <button class="signup">Sign Up</button>
+    </div>
+    <div class="modal.vote">
+        <h6>Click to vote!</h6>
+        <h1>First Round</h1>
+        <input placeholder="Username" class="user" type="text" />
+        <input placeholder="Password" class="pass" type="password" />
+        <button class="signup">Sign Up</button>
+    </div>
+    <div class="chat">
+        {% for message in messages %}
+        <div class="message">
+            <span>{{ message.user }}</span>
+            {{ message.content }}
+        </div>
+        {% endfor %}
+    </div>
+    {% if submit %}
+        <div class="submit">
+            <input placeholder="Message..." class="message"type="text">
+            <button class="send">Submit</button>
+        </div>
+    {% endif %}
+</body>
+</html>
