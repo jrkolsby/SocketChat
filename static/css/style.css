@@ -9,7 +9,7 @@ html, body {
     overflow: auto;
 }
 
-div.modal.login {
+div.modal {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -17,17 +17,20 @@ div.modal.login {
     border-radius: 8px;
     padding: 32px;
     background: #fff;
-    width: 300px;
-    box-shadow: 0 0 0 1000px rgba(0,0,0,0.2),
+    box-shadow: 0 0 0 1000px rgba(255,255,255,0.7),
                 0 0 40px rgba(0,0,0,0.3);
     z-index: 200;
 }
 
-div.modal-login input {
+div.modal.login {
+    width: 300px;
+}
+
+div.modal input {
     margin-bottom: 16px;
 }
 
-div.modal-login button {
+div.modal button {
     width: 100%;
     margin-bottom: 16px;
 }
@@ -65,6 +68,7 @@ div.submit {
 }
 
 div.message {
+    cursor: n-resize;
     display: block;
     clear: both;
     position: relative;
@@ -76,11 +80,27 @@ div.message {
     line-height: 1.2;
 }
 
-div.message span {
+div.message span.user {
     position: absolute;
     color: #ccc;
     left: 16px;
     bottom: -20px;
+    cursor: pointer;
+}
+
+div.message span.votes {
+    position: absolute;
+    color: #5BFF92;
+    right: 16px;
+    bottom: -20px;
+}
+
+div.message.personal span.votes {
+    color: #1D90FA;
+}
+
+div.message span.user:hover {
+    text-decoration: underline;
 }
 
 div.message.personal {
@@ -88,9 +108,10 @@ div.message.personal {
     margin-bottom: 16px;
     color: white;
     float: right;
+    cursor: default;
 }
 
-div.message.personal span {
+div.message.personal span.user {
     display: none;
 }
 

@@ -5,7 +5,7 @@ from flask_login import LoginManager, UserMixin
 
 from flask_socketio import SocketIO, send, emit
 
-from app.data import addMessage, getMessages
+from app.data import addMessage, getMessages, addVote
 from app.users import addUser, getUser
 
 app = Flask(__name__)
@@ -38,22 +38,48 @@ def message(username, content):
     # Socket will jsonify for us!
     return response
 
+def vote(messageID, count):
+    response = {
+        "type": "VOTE",
+        "payload": {
+            "id": messageID,
+            "count": count
+        }
+    }
+    # Socket will jsonify for us!
+    return response
+
+
 @login.user_loader
 def user_loader(userName):
     return getUser(userName)
 
 @socketio.on('message')
-def handleMessage(packet):
-    if packet['type'] == "MESSAGE":
+def handleSocket(packet):
+    packetType = packet['type']
+    payload = packet['payload']
 
-        payload = packet['payload']
-        username = payload['username']
-        content = payload['content']
-        token = payload['token']
+    username = payload['username']
+    token = payload['token']
+    user = getUser(username)
 
-        if getUser(username).verifyToken(token):
+    if user is not None and user.verifyToken(token):
+
+        if packetType == "MESSAGE":
+
+            content = payload['content']
             send(message(username, content), broadcast = True)
             addMessage(username, content)
+
+        elif packetType == "VOTE":
+            messageID = payload['messageID']
+
+            newCount = addVote(messageID)
+            send(vote(messageID, newCount))
+
+    else:
+        print "WARN: Unverified user"
+
 
 @app.route("/login", methods=['POST'])
 def login():

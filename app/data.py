@@ -11,10 +11,12 @@ class Message(Base):
     id = Column('id', Integer, primary_key=True)
     content = Column('content', String)
     time = Column('time', Integer)
+    votes = Column('votes', Integer)
 
     def __init__(self, content):
         self.content = content
         self.time = int(round(time.time() * 1000))
+        self.votes = 0
         session.add(self)
         session.commit()
 
@@ -29,6 +31,12 @@ class Join(Base):
         self.message = message.id
         session.add(self)
         session.commit()
+
+def addVote(messageID):
+    theMessage = session.query(Message).get(messageID)
+    theMessage.votes = theMessage.votes + 1
+    session.commit()
+    return theMessage.votes
 
 def addMessage(user, content):
     theUser = getUser(user)
@@ -45,7 +53,9 @@ def getMessages(user=None):
         .filter(userFilter).all()
 
     return list(map(lambda x: { \
-        "user": session.query(User).get(x.user).name,
+        "user": session.query(User).get(x.user).name, \
+        "id": session.query(Message).get(x.message).id, \
+        "votes": session.query(Message).get(x.message).votes, \
         "content": session.query(Message).get(x.message).content \
         }, joins))
 
